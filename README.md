@@ -61,9 +61,9 @@ Light Security是一个基于jwt的权限框架，支持与 `Spring Boot` 配合
 
 * 写配置
 
-  ```yml
+  ```yaml
   light-security:
-    # 权限规则：用{http-method}方法请求的{path}路径必须具备什么{expression}
+    # 权限规则配置：表示用{http-method}方法请求的{path}路径必须具备什么{expression}
     spec-list:
       - http-method: ANY
         path: /login
@@ -71,6 +71,9 @@ Light Security是一个基于jwt的权限框架，支持与 `Spring Boot` 配合
       - http-method: ANY
         path: /user
         expression: "hasAnyRoles('user','admin')"
+      - http-method: GET
+        path: /error
+        expression: "anon()"
       - http-method: ANY
         path: /**
         expression: "hasLogin()"
@@ -78,7 +81,7 @@ Light Security是一个基于jwt的权限框架，支持与 `Spring Boot` 配合
       # jwt sign算法
       algorithm: hs512
       # jwt secret
-      secret: 'http-security-secret-modify-me'
+      secret: http-security-secret-modify-mehttp-security-secret-modify
       # jwt 有效时间
       expiration-in-second: 1209600
   ```
@@ -152,7 +155,7 @@ public class LightSecurityConfigurtion {
 
 ```yaml
 light-security:
-  # 权限规则：用{http-method}方法请求的{path}路径必须具备什么{expression}
+  # 权限规则配置：表示用{http-method}方法请求的{path}路径必须具备什么{expression}
   spec-list:
     - http-method: ANY
       path: /login
@@ -160,6 +163,9 @@ light-security:
     - http-method: ANY
       path: /user
       expression: "hasAnyRoles('user','admin')"
+    - http-method: GET
+      path: /error
+      expression: "anon()"
     - http-method: ANY
       path: /**
       expression: "hasLogin()"
