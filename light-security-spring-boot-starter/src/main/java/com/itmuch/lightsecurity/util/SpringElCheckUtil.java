@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * @author itmuch.com
@@ -18,15 +17,14 @@ public class SpringElCheckUtil {
     /**
      * 校验expression是否能通过rootObject的检测
      *
-     * @param rootObject rootObject
+     * @param context    上下文
      * @param expression 表达式
      * @return 是否通过
      */
-    public static boolean check(Object rootObject, String expression) {
-        EvaluationContext context = new StandardEvaluationContext(rootObject);
-        Boolean value = PARSER.parseExpression(expression)
+    public static boolean check(EvaluationContext context, String expression) {
+        Boolean result = PARSER.parseExpression(expression)
                 .getValue(context, Boolean.class);
-        log.info("rootObject = {}, expression = {}", rootObject, expression);
-        return value != null ? value : false;
+        log.info("expression = {}, eval result = {}", expression, result);
+        return result != null ? result : false;
     }
 }

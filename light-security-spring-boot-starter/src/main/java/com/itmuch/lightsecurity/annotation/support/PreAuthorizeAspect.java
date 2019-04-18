@@ -10,6 +10,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Method;
 
@@ -29,10 +30,12 @@ public class PreAuthorizeAspect {
         Method method = signature.getMethod();
         if (method.isAnnotationPresent(PreAuthorize.class)) {
             PreAuthorize preAuthorize = method.getAnnotation(PreAuthorize.class);
-            // 表达式
-            String expression = preAuthorize.value();
 
-            boolean check = SpringElCheckUtil.check(preAuthorizeExpressionRoot, expression);
+            String expression = preAuthorize.value();
+            boolean check = SpringElCheckUtil.check(
+                    new StandardEvaluationContext(preAuthorizeExpressionRoot),
+                    expression
+            );
             if (!check) {
                 throw new LightSecurityException("no access");
             }

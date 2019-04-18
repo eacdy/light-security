@@ -6,12 +6,16 @@ import com.itmuch.lightsecurity.spec.Spec;
 import com.itmuch.lightsecurity.util.RestfulMatchUtil;
 import com.itmuch.lightsecurity.util.SpringElCheckUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * @author itmuch.com
+ */
 @RequiredArgsConstructor
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     private final List<Spec> specList;
@@ -25,7 +29,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 .findFirst()
                 .map(spec -> {
                     String expression = spec.getExpression();
-                    return SpringElCheckUtil.check(preAuthorizeExpressionRoot, expression);
+                    return SpringElCheckUtil.check(
+                            new StandardEvaluationContext(preAuthorizeExpressionRoot),
+                            expression
+                    );
 
                 })
                 .orElse(true);
