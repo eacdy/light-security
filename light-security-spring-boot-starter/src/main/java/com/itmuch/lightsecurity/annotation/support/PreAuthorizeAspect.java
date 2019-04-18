@@ -1,0 +1,43 @@
+package com.itmuch.lightsecurity.annotation.support;
+
+
+import com.itmuch.lightsecurity.annotation.PreAuthorize;
+import com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot;
+import com.itmuch.lightsecurity.exception.LightSecurityException;
+import com.itmuch.lightsecurity.util.SpringElCheckUtil;
+import lombok.AllArgsConstructor;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+
+import java.lang.reflect.Method;
+
+/**
+ * 处理PreAuthorize的切面
+ *
+ * @author itmuch.com
+ */
+@Aspect
+@AllArgsConstructor
+public class PreAuthorizeAspect {
+    private final PreAuthorizeExpressionRoot preAuthorizeExpressionRoot;
+
+    @Around("@annotation(com.itmuch.lightsecurity.annotation.PreAuthorize) ")
+    public Object preAuth(ProceedingJoinPoint point) throws Throwable {
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        Method method = signature.getMethod();
+        if (method.isAnnotationPresent(PreAuthorize.class)) {
+            PreAuthorize preAuthorize = method.getAnnotation(PreAuthorize.class);
+            // 表达式
+            String expression = preAuthorize.value();
+
+            boolean check = SpringElCheckUtil.check(preAuthorizeExpressionRoot, expression);
+            if (!check) {
+                throw new LightSecurityException("no access");
+            }
+        }
+        return point.proceed();
+    }
+}
+
