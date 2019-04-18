@@ -70,7 +70,7 @@ public class UserOperator {
             throw new LightSecurityException("token必须以'Bearer '开头");
         }
         if (header.length() <= SEVEN) {
-            throw new LightSecurityException("token非法，长度<=7");
+            throw new LightSecurityException("token非法，长度 <= 7");
         }
         return header.substring(SEVEN);
     }
