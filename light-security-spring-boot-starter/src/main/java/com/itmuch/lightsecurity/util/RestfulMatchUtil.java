@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @UtilityClass
-public class PathMatchUtil {
+public class RestfulMatchUtil {
     private static final String MATCH_ALL = "/**";
     private static final AntPathMatcher MATCHER = new AntPathMatcher();
 
@@ -52,7 +52,7 @@ public class PathMatchUtil {
             return true;
         }
         return httpMethod != null && StringUtils.hasText(request.getMethod())
-                && httpMethod != valueOf(request.getMethod());
+                && httpMethod == valueOf(request.getMethod());
     }
 
     /**
