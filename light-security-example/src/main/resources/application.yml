@@ -1,0 +1,21 @@
+server:
+  port: 8009
+light-security:
+  # 权限规则：用{http-method}方法请求的{path}路径必须具备什么{expression}
+  spec-list:
+    - http-method: ANY
+      path: /login
+      expression: "anon()"
+    - http-method: ANY
+      path: /user
+      expression: "hasAnyRoles('user','admin')"
+    - http-method: ANY
+      path: /**
+      expression: "hasLogin()"
+  jwt:
+    # jwt sign算法
+    algorithm: hs512
+    # jwt secret
+    secret: 'http-security-secret-modify-me'
+    # jwt 有效时间
+    expiration-in-second: 1209600
