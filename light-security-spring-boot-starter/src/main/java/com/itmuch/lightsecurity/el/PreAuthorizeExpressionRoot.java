@@ -18,6 +18,10 @@ import java.util.List;
 public class PreAuthorizeExpressionRoot {
     private final UserOperator userOperator;
 
+    public boolean anon() {
+        return true;
+    }
+
     public boolean hasLogin() {
         return userOperator.getUser() != null;
     }

@@ -3,7 +3,7 @@ package com.itmuch.lightsecurity.interceptor;
 import com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot;
 import com.itmuch.lightsecurity.exception.LightSecurityException;
 import com.itmuch.lightsecurity.spec.Spec;
-import com.itmuch.lightsecurity.util.PathMatchUtil;
+import com.itmuch.lightsecurity.util.RestfulMatchUtil;
 import com.itmuch.lightsecurity.util.SpringElCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -18,10 +18,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     private final PreAuthorizeExpressionRoot preAuthorizeExpressionRoot;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 当前请求的路径和定义的规则能够匹配
         Boolean checkResult = specList.stream()
-                .filter(spec -> PathMatchUtil.match(request, spec.getHttpMethod(), spec.getPath()))
+                .filter(spec -> RestfulMatchUtil.match(request, spec.getHttpMethod(), spec.getPath()))
                 .findFirst()
                 .map(spec -> {
                     String expression = spec.getExpression();
