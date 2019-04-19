@@ -6,6 +6,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author itmuch.com
+ */
 @Data
 public class SpecRegistry {
     private List<Spec> specList = new ArrayList<>();
