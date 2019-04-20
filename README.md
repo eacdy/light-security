@@ -51,7 +51,7 @@ Light Security是一个基于jwt的权限框架，支持与 `Spring Boot` 配合
   <dependency>
       <groupId>com.itmuch.security</groupId>
       <artifactId>light-security-spring-boot-starter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.2-SNAPSHOT</version>
   </dependency>
   <dependency>
       <groupId>org.springframework.boot</groupId>
