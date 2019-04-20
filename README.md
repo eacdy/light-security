@@ -1,6 +1,16 @@
 # Light Security
 
-Light Security是一个基于jwt的权限框架，支持与 `Spring Boot` 配合使用。
+Light Security是一个基于 `jwt` 的权限控制框架，支持与 `Spring Boot` 配合使用。
+
+
+
+## 地址
+
+GitHub：<https://github.com/eacdy/light-security>
+
+Gitee：<https://gitee.com/itmuch/light-security>
+
+
 
 ## 特点
 
