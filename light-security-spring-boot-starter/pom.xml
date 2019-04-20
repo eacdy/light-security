@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.itmuch.security</groupId>
   <artifactId>light-security-spring-boot-starter</artifactId>
-  <version>1.0.1-RELEASE</version>
+  <version>1.0.2-SNAPSHOT</version>
   <name>Spring Boot Light Security Starter</name>
   <description>Starter for using Light Security.</description>
   <url>https://github.com/eacdy/light-security</url>
