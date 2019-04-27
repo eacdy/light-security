@@ -1,6 +1,6 @@
 # Light Security
 
-Light Security简洁而不简单的权限控制框架，基于 `jwt` ，支持与 `Spring Boot` 配合使用。
+Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` ，支持与 `Spring Boot` 配合使用。
 
 
 
