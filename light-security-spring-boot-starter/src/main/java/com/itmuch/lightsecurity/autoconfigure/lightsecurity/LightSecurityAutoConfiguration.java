@@ -22,8 +22,7 @@ import java.util.List;
 @Data
 @Configuration
 @Import(LightSecurityConfiguration.class)
-@EnableConfigurationProperties(LightSecurityProperties.class)
-class LightSecurityAutoConfiguration implements WebMvcConfigurer {
+public class LightSecurityAutoConfiguration implements WebMvcConfigurer {
     private List<Spec> specList;
     private PreAuthorizeExpressionRoot preAuthorizeExpressionRoot;
 

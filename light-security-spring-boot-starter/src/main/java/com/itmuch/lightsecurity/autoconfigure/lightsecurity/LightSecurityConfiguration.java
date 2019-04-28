@@ -9,11 +9,13 @@ import com.itmuch.lightsecurity.spec.SpecRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+
 
 /**
  * 配置类
@@ -21,8 +23,9 @@ import java.util.List;
  * @author itmuch.com
  */
 @Configuration
+@EnableConfigurationProperties(LightSecurityProperties.class)
 @AutoConfigureBefore(LightSecurityAutoConfiguration.class)
-class LightSecurityConfiguration {
+public class LightSecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public JwtOperator jwtOperator(LightSecurityProperties lightSecurityProperties) {
@@ -49,17 +52,17 @@ class LightSecurityConfiguration {
 
     @Bean
     @ConditionalOnBean(SpecRegistry.class)
-    public List<Spec> specListFromSpecRegistry(SpecRegistry specRegistry, LightSecurityProperties lightSecurityProperties) {
+    public List<Spec> specListFromSpecRegistry(SpecRegistry specRegistry) {
         List<Spec> specList = specRegistry.getSpecList();
         if (CollectionUtils.isEmpty(specList)) {
             throw new IllegalArgumentException("specList cannot be empty.");
         }
-        return this.specListFromProperties(lightSecurityProperties);
+        return specList;
     }
 
     @Bean
+    @ConditionalOnMissingBean(SpecRegistry.class)
     public List<Spec> specListFromProperties(LightSecurityProperties lightSecurityProperties) {
         return lightSecurityProperties.getSpecList();
     }
 }
-
