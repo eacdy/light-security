@@ -1,14 +1,13 @@
 # Light Security
 
-Light Security是一个基于 `jwt` 的权限控制框架，支持与 `Spring Boot` 配合使用。
+Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` ，支持与 `Spring Boot` 配合使用。
 
 
 
 ## 地址
 
-GitHub：<https://github.com/eacdy/light-security>
-
-Gitee：<https://gitee.com/itmuch/light-security>
+* [GitHub](https://github.com/eacdy/light-security)
+* [Gitee](https://gitee.com/itmuch/light-security)
 
 
 
@@ -31,17 +30,19 @@ Gitee：<https://gitee.com/itmuch/light-security>
 
 ### 缺点
 
-* 功能比Spring Security、Apache Shiro弱；
+* 功能
+  * 比 Spring Security 弱一点
+  * 和Shiro比功能差不多，但没有实现复杂的Authentication Strategy（想实现；
 * **只考虑权限相关问题**
   * 不考虑身份认证(登录)，意味着登录逻辑得自己玩；
-  * 不考虑安全，意味着网络攻击得自己防；
+  * 不考虑防攻击，意味着网络攻击得自己防；
 * **目前与Spring MVC强绑定**，暂不支持WebFlux或其他框架。
 
 
 
 ## 依赖
 
-* Spring MVC：用到Spring MVC的拦截器；
+* Spring MVC：用到Spring MVC的拦截器，如果只使用基于注解的权限控制，则无需该部分依赖；
 * Spring AOP：如果不用基于注解的权限控制，则无需该部分依赖；
 * jwt：你懂的
 
@@ -207,7 +208,7 @@ light-security:
 
 
 
-### 为什么实现一个通用的权限解决方案？
+### 为什么不实现一个通用的权限解决方案？
 
 有考虑实现一个通用权限框架，但那样会增加挺多代码，而且要添加挺多适配逻辑(例如适配Spring MVC、WebFlux等)。
 
