@@ -1,0 +1,23 @@
+### 第一步：模拟登陆，返回token
+GET http://localhost:8009/login
+
+
+### 【可入】第二步：请求带上token，请求/user端点，该端点需要具备admin/user角色之一才能访问
+GET http://localhost:8009/user
+Authorization:Bearer 第一步返回的token
+
+
+### 【无权】第三步：请求带上token，请求/user-no-access端点，该端点需同时具备admin/user/xx角色之一才能访问
+GET http://localhost:8009/user-no-access
+Authorization:Bearer 第一步返回的token
+
+
+### 【可入】第四步：请求带上token，请求/annotation-test端点，该端点必须同时具备admin以及user角色才能访问
+GET http://localhost:8009/annotation-test
+Authorization:Bearer 第一步返回的token
+
+
+### 【无权】第五步：请求带上token，请求/annotation-test-no-access端点，该端点必须同时具备admin、user、xx角色才能访问
+GET http://localhost:8009/annotation-test-no-access
+Authorization:Bearer 第一步返回的token
+

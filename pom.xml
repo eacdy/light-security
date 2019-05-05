@@ -11,6 +11,8 @@
     <modules>
         <module>light-security-spring-boot-starter</module>
         <module>light-security-example</module>
+        <module>light-security-webflux-spring-boot-starter</module>
+        <module>light-security-webflux-example</module>
     </modules>
 
 </project>
