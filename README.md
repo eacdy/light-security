@@ -1,6 +1,6 @@
 # Light Security
 
-Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` ，支持与 `Spring Boot` 配合使用。
+Light Security是一款基于 `jwt` 的、简洁而不简单的权限控制框架，可与 `Spring Boot` 配合使用，支持传统 `Spring MVC` 及 `WebFlux` 。
 
 
 
@@ -42,7 +42,8 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
 
 ## 依赖
 
-* Spring MVC：用到Spring MVC的拦截器，如果只使用基于注解的权限控制，则无需该部分依赖；
+* Spring MVC：用到Spring MVC的拦截器，如只使用基于注解的权限控制，则无需该部分依赖；
+* Spring WebFlux：用到WebFlux的Filter，如只使用基于注解的权限控制，则无需该部分依赖；
 * Spring AOP：如果不用基于注解的权限控制，则无需该部分依赖；
 * jwt：你懂的
 
@@ -50,11 +51,13 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
 
 ## 快速上手
 
+### Spring Web编程模型
+
 > **TIPS**
 >
 > 快速上手可详见项目 `light-security-example` 目录，内附详细测试步骤。
 
-### 基于配置文件的权限配置
+#### 基于配置文件的权限配置
 
 * 加依赖：
 
@@ -73,6 +76,8 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
 * 写配置
 
   ```yaml
+  server:
+    port: 8009
   light-security:
     # 权限规则配置：表示用{http-method}方法请求的{path}路径必须具备什么{expression}
     spec-list:
@@ -82,6 +87,9 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
       - http-method: ANY
         path: /user
         expression: "hasAnyRoles('user','admin')"
+      - http-method: ANY
+        path: /user-no-access
+        expression: "hasAllRoles('user','admin','xx')"
       - http-method: GET
         path: /error
         expression: "anon()"
@@ -92,7 +100,7 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
       # jwt sign算法
       algorithm: hs512
       # jwt secret
-      secret: http-security-secret-modify-mehttp-security-secret-modify
+      secret: {secret}
       # jwt 有效时间
       expiration-in-second: 1209600
   ```
@@ -118,6 +126,11 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
           return userOperator.getUser();
       }
   
+      @GetMapping("/user-no-access")
+      public User userNoAccess() {
+          return userOperator.getUser();
+      }
+  
       /**
        * 演示基于注解的权限控制
        *
@@ -129,12 +142,18 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
           return "亲，你同时有user、admin角色..";
       }
   
+      @GetMapping("/annotation-test-no-access")
+      @PreAuthorize("hasAllRoles('user','admin','xx')")
+      public String annotationTestNoAccess() {
+          return "亲，你同时有user、admin、xx角色..";
+      }
+  
       /**
        * 模拟登录，颁发token
        *
        * @return token字符串
        */
-      @GetMapping("/login")
+    @GetMapping("/login")
       public String loginReturnToken() {
           User user = User.builder()
                   .id(1)
@@ -145,10 +164,10 @@ Light Security是一款简洁而不简单的权限控制框架，基于 `jwt` �
       }
   }
   ```
-
+  
   
 
-### 基于代码的权限配置
+#### 基于代码的权限配置
 
 ```java
 @Configuration
@@ -174,6 +193,174 @@ light-security:
     - http-method: ANY
       path: /user
       expression: "hasAnyRoles('user','admin')"
+    - http-method: ANY
+      path: /user-no-access
+      expression: "hasAllRoles('user','admin','xx')"
+    - http-method: GET
+      path: /error
+      expression: "anon()"
+    - http-method: ANY
+      path: /**
+      expression: "hasLogin()"
+```
+
+
+
+#### 扩展点
+
+| 类                                                           | 作用                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| com.itmuch.lightsecurity.jwt.UserOperator                    | 提供用户相关操作，例如解析token获得用户信息等。              |
+| com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot       | 提供了表达式，例如`hasAnyRoles('user')` 等，如需新能力，只要写新方法即可 |
+| com.itmuch.lightsecurity.annotation.support.PreAuthorizeAspect | 为注解 `@PreAuthorize("hasAllRoles('user','admin')")`提供支持 |
+
+
+
+### WebFlux编程模型
+
+> **TIPS**
+>
+> 快速上手可详见项目 `light-security-webflux-example` 目录，内附详细测试步骤。
+
+#### 基于配置文件的权限配置
+
+* 加依赖
+
+  ```xml
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>com.itmuch.security</groupId>
+    <artifactId>light-security-webflux-spring-boot-starter</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </dependency>
+  ```
+
+* 写配置
+
+  ```yaml
+  server:
+    port: 8009
+  light-security:
+    # 权限规则配置：表示用{http-method}方法请求的{path}路径必须具备什么{expression}
+    spec-list:
+      - http-method: ANY
+        path: /login
+        expression: "anon()"
+      - http-method: ANY
+        path: /user
+        expression: "hasAnyRoles('user','admin')"
+      - http-method: ANY
+        path: /user-no-access
+        expression: "hasAllRoles('user','admin','xx')"
+      - http-method: GET
+        path: /error
+        expression: "anon()"
+      - http-method: ANY
+        path: /**
+        expression: "hasLogin()"
+    jwt:
+      # jwt sign算法
+      algorithm: hs512
+      # jwt secret
+      secret: {secret}
+      # jwt 有效时间
+      expiration-in-second: 1209600
+  ```
+
+* 写代码
+
+  ```java
+  @RequestMapping
+  @RestController
+  @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+  public class TestController {
+      private final ReactiveUserOperator userOperator;
+      private final JwtOperator operator;
+  
+      /**
+       * 演示如何获取当前登录用户信息
+       * - 该路径需要具备user或admin权限才可访问，详见application.yml
+       *
+       * @return 用户信息
+       */
+      @GetMapping("/user")
+      public Mono<User> user() {
+          return userOperator.getUser();
+      }
+  
+      @GetMapping("/user-no-access")
+      public Mono<User> userNoAccess() {
+          return userOperator.getUser();
+      }
+  
+      /**
+       * 演示基于注解的权限控制
+       *
+       * @return 如果有权限返回 亲，你同时有user、admin角色..
+       */
+      @GetMapping("/annotation-test")
+      @PreAuthorize("hasAllRoles('user','admin')")
+      public Mono<String> annotationTest() {
+          return Mono.just("亲，你同时有user、admin角色..");
+      }
+  
+      @GetMapping("/annotation-test-no-access")
+      @PreAuthorize("hasAllRoles('user','admin','xx')")
+      public Mono<String> annotationTestNoAccess() {
+          return Mono.just("亲，你同时有user、admin、xx角色..");
+      }
+  
+      /**
+       * 模拟登录，颁发token
+       *
+       * @return token字符串
+       */
+      @GetMapping("/login")
+      public String loginReturnToken() {
+          User user = User.builder()
+                  .id(1)
+                  .username("张三")
+                  .roles(Arrays.asList("user", "admin"))
+                  .build();
+          return operator.generateToken(user);
+      }
+  }
+  ```
+
+
+
+#### 基于代码的权限配置
+
+```java
+@Configuration
+public class LightSecurityConfigurtion {
+    @Bean
+    public SpecRegistry specRegistry() {
+        return new SpecRegistry()
+                .add(HttpMethod.GET, "/user", "hasAnyRoles('user')")
+                .add(HttpMethod.ANY, "/**", "hasLogin()");
+    }
+}
+```
+
+此时，`application.yml` 中的如下配置可删除，**因为代码配置方式优先级更高，配置文件方式将会失效**。
+
+```yaml
+light-security:
+  # 权限规则配置：表示用{http-method}方法请求的{path}路径必须具备什么{expression}
+  spec-list:
+    - http-method: ANY
+      path: /login
+      expression: "anon()"
+    - http-method: ANY
+      path: /user
+      expression: "hasAnyRoles('user','admin')"
+    - http-method: ANY
+      path: /user-no-access
+      expression: "hasAllRoles('user','admin','xx')"
     - http-method: GET
       path: /error
       expression: "anon()"
@@ -186,35 +373,15 @@ light-security:
 
 
 
-## 扩展点
-
-| 类                                                           | 作用                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| com.itmuch.lightsecurity.jwt.UserOperator                    | 提供用户相关操作，例如解析token获得用户信息等。              |
-| com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot       | 提供了表达式，例如`hasAnyRoles('user')` 等，如需新能力，只要写新方法即可 |
-| com.itmuch.lightsecurity.annotation.support.PreAuthorizeAspect | 为注解 `@PreAuthorize("hasAllRoles('user','admin')")`提供支持 |
-
-
-
 ## 常见问题
 
-### 为什么要再造个轮子？
+### 为什么要造这个轮子？
 
-老是有人问我诸如"微服务安全怎么管理？"、"Spring Securityxxxx问题你遇到过吗？"、"能写个Spring Cloud Security的系列教程吗？"、"Shiroxxxx问题你遇到过吗？"
+老是有人问我诸如"微服务安全怎么管理？"、"Spring Security xxxx问题你遇到过吗？"、"能写个Spring Cloud Security的系列教程吗？"、"Shiroxxxx问题你遇到过吗？"
 
 烦不胜烦，初期积极回复；后来消极回复；再后来懒得回复。
 
 分析一下，发现主要原因还是Spring Security、Shiro学习曲线较高，特别是Spring Security。所以就想写个轻量的框架，能够快速解决主要矛盾——足够简单、能实现权限控制。
-
-
-
-### 为什么不实现一个通用的权限解决方案？
-
-有考虑实现一个通用权限框架，但那样会增加挺多代码，而且要添加挺多适配逻辑(例如适配Spring MVC、WebFlux等)。
-
-个人认为这在现阶段去实现还不合适，个人不太喜欢画饼。既然"通用性"不是目前最主要的矛盾，高效解决问题相对更加重要。那何必花精力去实现通用性？设计上支持往"通用性"迁移即可。
-
-未来如果有需求，我会做一个通用版本，并且低版本也可无痛、平滑地迁移。
 
 
 
@@ -238,4 +405,4 @@ light-security:
 * 支持对称加密/非对称加密配置化；
 * 支持 `JWE` 
 * 补充单元测试
-* 将 `light-security` 与 `light-security-spring-boot` 分离，否则既是框架，又是Starter感觉有点怪。
+* 将框架与starter分离，否则既是框架，又是Starter感觉有点怪。

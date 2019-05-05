@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 /**
- * @author reno
+ * @author itmuch.com
  */
 @RequestMapping
 @RestController
