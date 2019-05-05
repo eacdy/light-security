@@ -37,7 +37,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 })
                 .orElse(true);
         if (!checkResult) {
-            throw new LightSecurityException("无权...");
+            throw new LightSecurityException("Access Denied.");
         }
 
         return true;
