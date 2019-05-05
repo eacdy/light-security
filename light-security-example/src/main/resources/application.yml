@@ -9,6 +9,9 @@ light-security:
     - http-method: ANY
       path: /user
       expression: "hasAnyRoles('user','admin')"
+    - http-method: ANY
+      path: /user-no-access
+      expression: "hasAllRoles('user','admin','xx')"
     - http-method: GET
       path: /error
       expression: "anon()"

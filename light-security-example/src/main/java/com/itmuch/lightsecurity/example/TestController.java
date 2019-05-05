@@ -33,6 +33,11 @@ public class TestController {
         return userOperator.getUser();
     }
 
+    @GetMapping("/user-no-access")
+    public User userNoAccess() {
+        return userOperator.getUser();
+    }
+
     /**
      * 演示基于注解的权限控制
      *
@@ -42,6 +47,12 @@ public class TestController {
     @PreAuthorize("hasAllRoles('user','admin')")
     public String annotationTest() {
         return "亲，你同时有user、admin角色..";
+    }
+
+    @GetMapping("/annotation-test-no-access")
+    @PreAuthorize("hasAllRoles('user','admin','xx')")
+    public String annotationTestNoAccess() {
+        return "亲，你同时有user、admin、xx角色..";
     }
 
     /**
