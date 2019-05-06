@@ -11,7 +11,7 @@ GET http://localhost:8009/login
 
 
 
-### 第二步：验证基于 `application.yml` 的权限控制
+### 第二步：验证基于 `application.yml` 的权限控制[可入]
 
 ```shell
 # 请求/user端点，该端点需要具备admin/user角色之一才能访问
@@ -21,7 +21,16 @@ Authorization:Bearer 你的token
 
 
 
-### 第三步：验证基于注解的权限控制
+### 第三步：验证基于 `application.yml` 的权限控制[无权]
+```shell
+# 请求/user-no-access端点，该端点需同时具备admin/user/xx角色之一才能访问，故而当前用户无法访问该端点
+GET http://localhost:8009/user-no-access
+Authorization:Bearer 你的token
+```
+
+
+
+### 第四步：验证基于注解的权限控制[可入]
 
 ```shell
 # 请求/annotation-test端点，该端点必须同时具备admin以及user端点才能访问
@@ -31,6 +40,15 @@ Authorization:Bearer 你的token
 
 
 
+### 第五步：验证基于注解的权限控制[无权]
+```shell
+# 请求/annotation-test-no-access端点，该端点必须同时具备admin、user、xx角色才能访问，故而当前用户无法访问该端点
+GET http://localhost:8009/annotation-test-no-access
+Authorization:Bearer 你的token
+```
+
+
+
 ## IntelliJ IDEA懒人玩法
 
-用IDEA打开 `IDEA HTTP Client测试脚本.http` ，依次执行第一步、第二步、第三步即可。
+用IDEA打开 `IDEA HTTP Client测试脚本.http` ，依次执行即可。
