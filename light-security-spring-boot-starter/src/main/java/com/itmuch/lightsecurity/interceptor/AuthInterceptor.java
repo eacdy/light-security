@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
+ * 授权控制拦截器
+ *
  * @author itmuch.com
  */
 @RequiredArgsConstructor
@@ -39,7 +41,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (!checkResult) {
             throw new LightSecurityException("Access Denied.");
         }
-
         return true;
     }
 }

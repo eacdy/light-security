@@ -33,10 +33,9 @@ public class GlobalErrorWebExceptionHandler extends
                 RequestPredicates.all(), this::renderErrorResponse);
     }
 
-    private Mono<ServerResponse> renderErrorResponse(
-            ServerRequest request) {
-        Throwable error = getError(request);
-        Map<String, Object> errorPropertiesMap = getErrorAttributes(request, false);
+    private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+        Throwable error = super.getError(request);
+        Map<String, Object> errorPropertiesMap = super.getErrorAttributes(request, false);
 
         if (error instanceof LightSecurityException) {
             return ServerResponse.status(HttpStatus.UNAUTHORIZED)

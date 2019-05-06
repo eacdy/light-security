@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * 异常
+ * light security异常
  *
  * @author itmuch.com
  */

@@ -18,25 +18,28 @@ Light Security是一款基于 `jwt` 的、简洁而不简单的权限控制框�
 - 上手快速
 - **开箱即用**
 - **轻量级，代码精简，不到500行代码**；
-- **功能实用，市面上安全框架常用能力与套路均已具备**：
+- **功能实用，市面上安全框架常见能力与套路均已具备**：
   - 支持 `RESTful` 权限控制
   - 支持灵活的权限配置(**代码配置方式优先级更高**)
     - 支持基于配置文件的权限配置
     - 支持基于代码的权限控制
   - 支持基于注解的权限控制
 - 设计简单，没有复杂概念；
-  - 基于权限配置的方式：核心是1个拦截器
-  - 基于注解的权限控制：核心是1个切面
+  - Spring Web编程模型
+    - 基于权限配置的方式：核心是1个拦截器
+    - 基于注解的权限控制：核心是1个切面
+  - WebFlux编程模型
+    - 基于权限配置的方式：核心是1个过滤器
+    - 基于注解的权限控制：核心是1个切面
 
 ### 缺点
 
 * 功能
   * 比 Spring Security 弱一点
-  * 和Shiro比功能差不多，但没有实现复杂的Authentication Strategy（想实现；
+  * 和Shiro比功能差不多，但没有实现复杂的Authentication Strategy（想实现也很简单，详见扩展点）
 * **只考虑权限相关问题**
   * 不考虑身份认证(登录)，意味着登录逻辑得自己玩；
   * 不考虑防攻击，意味着网络攻击得自己防；
-* **目前与Spring MVC强绑定**，暂不支持WebFlux或其他框架。
 
 
 
@@ -211,7 +214,7 @@ light-security:
 | 类                                                           | 作用                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | com.itmuch.lightsecurity.jwt.UserOperator                    | 提供用户相关操作，例如解析token获得用户信息等。              |
-| com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot       | 提供了表达式，例如`hasAnyRoles('user')` 等，如需新能力，只要写新方法即可 |
+| com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot       | 提供表达式支持，例如`hasAnyRoles('user')` 等，如需新能力，只需编写新方法即可 |
 | com.itmuch.lightsecurity.annotation.support.PreAuthorizeAspect | 为注解 `@PreAuthorize("hasAllRoles('user','admin')")`提供支持 |
 
 
@@ -369,7 +372,13 @@ light-security:
       expression: "hasLogin()"
 ```
 
+#### 扩展点
 
+| 类                                                           | 作用                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| com.itmuch.lightsecurity.jwt.ReactiveUserOperator            | 提供用户相关操作，例如解析token获得用户信息等。              |
+| com.itmuch.lightsecurity.el.ReactivePreAuthorizeExpressionRoot | 提供表达式支持，例如`hasAnyRoles('user')` 等，如需新能力，只需编写新方法即可 |
+| com.itmuch.lightsecurity.annotation.support.ReactivePreAuthorizeAspect | 为注解 `@PreAuthorize("hasAllRoles('user','admin')")`提供支持 |
 
 
 

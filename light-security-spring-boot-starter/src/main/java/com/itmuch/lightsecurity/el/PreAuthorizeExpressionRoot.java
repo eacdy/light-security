@@ -19,18 +19,40 @@ import java.util.List;
 public class PreAuthorizeExpressionRoot {
     private final UserOperator userOperator;
 
+    /**
+     * 匿名即可访问
+     *
+     * @return true
+     */
     public boolean anon() {
         return true;
     }
 
+    /**
+     * 登录才能访问
+     *
+     * @return 如已登录，则返回true
+     */
     public boolean hasLogin() {
         return userOperator.getUser() != null;
     }
 
+    /**
+     * 拥有指定角色才能访问
+     *
+     * @param role 角色
+     * @return 如果拥有指定角色，则返回true
+     */
     public boolean hasRole(String role) {
         return hasAnyRoles(role);
     }
 
+    /**
+     * 拥有所有指定角色才能访问
+     *
+     * @param roles 角色
+     * @return 如果拥有roles所有角色，则返回true
+     */
     public boolean hasAllRoles(String... roles) {
         User user = userOperator.getUser();
         if (user == null) {
@@ -45,6 +67,12 @@ public class PreAuthorizeExpressionRoot {
         return userRoles.containsAll(roleList);
     }
 
+    /**
+     * 拥有指定角色之一即可访问
+     *
+     * @param roles 角色
+     * @return 如果拥有roles元素之一，则返回true
+     */
     public boolean hasAnyRoles(String... roles) {
         User user = userOperator.getUser();
         if (user == null) {

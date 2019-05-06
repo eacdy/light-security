@@ -24,6 +24,11 @@ public class UserOperator {
 
     private final JwtOperator jwtOperator;
 
+    /**
+     * 获取当前登录用户信息
+     *
+     * @return 用户信息
+     */
     public User getUser() {
         try {
             HttpServletRequest request = getRequest();
@@ -46,6 +51,12 @@ public class UserOperator {
         }
     }
 
+    /**
+     * 解析token，获得用户信息
+     *
+     * @param token token
+     * @return 用户信息
+     */
     @SuppressWarnings("unchecked")
     private User getUserFromToken(String token) {
         // 从token中获取user
@@ -61,6 +72,12 @@ public class UserOperator {
                 .build();
     }
 
+    /**
+     * 从request中获取token
+     *
+     * @param request 请求
+     * @return token
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(ConstantsSecurity.AUTHORIZATION_HEADER);
         if (StringUtils.isEmpty(header)) {
@@ -75,7 +92,11 @@ public class UserOperator {
         return header.substring(SEVEN);
     }
 
-
+    /**
+     * 获取request
+     *
+     * @return request
+     */
     private static HttpServletRequest getRequest() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if ((requestAttributes == null)) {

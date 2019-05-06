@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
+ * 授权控制过滤器
+ *
  * @author itmuch.com
  */
 @RequiredArgsConstructor

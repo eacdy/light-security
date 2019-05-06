@@ -19,10 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ReactiveUserOperator {
     private final JwtOperator jwtOperator;
-    private static final String LIGHT_SECURITY_REQ_ATTR_USER = "light-security-user";
     private static final int SEVEN = 7;
 
-
+    /**
+     * 获取用户信息
+     *
+     * @return 用户信息
+     */
     public Mono<User> getUser() {
         return ReactiveRequestContextHolder.getRequest()
                 .map(serverHttpRequest -> {
@@ -32,6 +35,12 @@ public class ReactiveUserOperator {
                 );
     }
 
+    /**
+     * 解析token，获得用户信息
+     *
+     * @param token token
+     * @return 用户信息
+     */
     @SuppressWarnings("unchecked")
     private User getUserFromToken(String token) {
         // 从token中获取user
@@ -47,6 +56,12 @@ public class ReactiveUserOperator {
                 .build();
     }
 
+    /**
+     * 从request中获取token
+     *
+     * @param request request
+     * @return token
+     */
     private String getTokenFromRequest(ServerHttpRequest request) {
         List<String> headers = request.getHeaders()
                 .get(ConstantsSecurity.AUTHORIZATION_HEADER);

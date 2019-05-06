@@ -17,12 +17,12 @@ public class LightSecurityExceptionHandler {
     /**
      * Light Security相关异常
      *
-     * @param e e
+     * @param exception 异常
      * @return 发生异常时的返回
      */
     @ExceptionHandler(value = {LightSecurityException.class})
     @ResponseBody
-    public ResponseEntity<String> error(LightSecurityException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> error(LightSecurityException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

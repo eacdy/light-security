@@ -6,6 +6,13 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * 实现静态方法拿request
+ * 参考：https://juejin.im/post/5ca5c18bf265da30ce02928f
+ *
+ * @author L.cm
+ * @author itmuch.com
+ */
 public class ReactorContextWebFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {

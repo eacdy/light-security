@@ -1,7 +1,7 @@
 package com.itmuch.lightsecurity.exception;
 
 /**
- * 异常
+ * light security异常
  *
  * @author itmuch.com
  */

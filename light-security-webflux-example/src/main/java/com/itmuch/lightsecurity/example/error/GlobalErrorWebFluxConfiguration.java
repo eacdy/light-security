@@ -49,6 +49,7 @@ public class GlobalErrorWebFluxConfiguration {
                 this.resourceProperties,
                 this.applicationContext
         );
+
         exceptionHandler.setViewResolvers(this.viewResolvers);
         exceptionHandler.setMessageWriters(this.serverCodecConfigurer.getWriters());
         exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());

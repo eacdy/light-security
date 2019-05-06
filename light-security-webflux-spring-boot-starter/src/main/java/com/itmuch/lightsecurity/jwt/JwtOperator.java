@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author zhouli
+ * @author itmuch.com
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +26,12 @@ public class JwtOperator {
     public static final String ROLES = "roles";
     private final ReactiveLightSecurityProperties reactiveLightSecurityProperties;
 
+    /**
+     * 从token中获取claim
+     *
+     * @param token token
+     * @return claim
+     */
     public Claims getClaimsFromToken(String token) {
         try {
             return Jwts.parser()
@@ -39,19 +45,42 @@ public class JwtOperator {
         }
     }
 
+    /**
+     * 获取token的过期时间
+     *
+     * @param token token
+     * @return 过期时间
+     */
     public Date getExpirationDateFromToken(String token) {
         return getClaimsFromToken(token).getExpiration();
     }
 
+    /**
+     * 判断token是否过期
+     *
+     * @param token token
+     * @return 已过期返回true，未过期返回false
+     */
     private Boolean isTokenExpired(String token) {
         Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    public Date getExpirationTime() {
+    /**
+     * 计算token的过期时间
+     *
+     * @return 过期时间
+     */
+    private Date getExpirationTime() {
         return new Date(System.currentTimeMillis() + reactiveLightSecurityProperties.getJwt().getExpirationInSecond() * 1000);
     }
 
+    /**
+     * 为指定用户生成token
+     *
+     * @param user 用户信息
+     * @return token
+     */
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>(3);
         claims.put(USER_ID, user.getId());
@@ -71,6 +100,12 @@ public class JwtOperator {
                 .compact();
     }
 
+    /**
+     * 判断token是否非法
+     *
+     * @param token token
+     * @return 未过期返回true，否则返回false
+     */
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
     }

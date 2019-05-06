@@ -15,7 +15,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import java.lang.reflect.Method;
 
 /**
- * 处理PreAuthorize的切面
+ * 处理PreAuthorize注解的切面
  *
  * @author itmuch.com
  */
@@ -37,7 +37,7 @@ public class PreAuthorizeAspect {
                     expression
             );
             if (!check) {
-                throw new LightSecurityException("no access");
+                throw new LightSecurityException("Access Denied.");
             }
         }
         return point.proceed();
