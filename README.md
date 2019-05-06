@@ -1,6 +1,6 @@
 # Light Security
 
-Light Security是一款基于 `jwt` 的、简洁而不简单的权限控制框架，可与 `Spring Boot` 配合使用，支持传统 `Spring MVC` 及 `WebFlux` 。
+Light Security是一款基于 `jwt` 的、简洁而不简单的权限控制框架，可与 `Spring Boot` 配合使用，支持 `Spring MVC` 及 `WebFlux` 。
 
 
 
