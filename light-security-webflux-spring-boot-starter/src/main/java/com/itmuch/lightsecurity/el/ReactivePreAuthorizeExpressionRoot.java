@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Slf4j
 @AllArgsConstructor
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess","unused"})
 public class ReactivePreAuthorizeExpressionRoot {
     private final ReactiveUserOperator userOperator;
 
@@ -89,7 +89,7 @@ public class ReactivePreAuthorizeExpressionRoot {
                     boolean result = userRoles.stream()
                             .anyMatch(roleList::contains);
                     if (!result) {
-                        log.warn("hasAnyRoles check failed. userRolesFromToken = {}, roles = {}", userRoles, roles);
+                        log.warn("hasAnyRoles check failed. userRolesFromToken = {}, roles = {}", userRoles, roleList);
                     }
                     return result;
                 })

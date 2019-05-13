@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Slf4j
 @AllArgsConstructor
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class PreAuthorizeExpressionRoot {
     private final UserOperator userOperator;
 
