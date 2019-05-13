@@ -88,7 +88,7 @@ public class PreAuthorizeExpressionRoot {
         boolean checkResult = userRoles.stream()
                 .anyMatch(roleList::contains);
         if (!checkResult) {
-            log.warn("角色不匹配，userRolesFromToken = {}, roles = {}", userRoles, roles);
+            log.warn("角色不匹配，userRolesFromToken = {}, roles = {}", userRoles, roleList);
         }
         return checkResult;
     }
