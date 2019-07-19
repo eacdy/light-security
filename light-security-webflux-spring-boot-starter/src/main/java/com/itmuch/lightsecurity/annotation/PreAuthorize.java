@@ -15,7 +15,7 @@ public @interface PreAuthorize {
      * 参考：https://docs.spring.io/spring/docs/5.1.6.RELEASE/spring-framework-reference/core.html#expressions
      *
      * @return 表达式
-     * @see com.itmuch.lightsecurity.el.PreAuthorizeExpressionRoot
+     * @see com.itmuch.lightsecurity.el.ReactivePreAuthorizeExpressionRoot
      */
     String value();
 }

@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.itmuch.security</groupId>
-  <artifactId>light-security-webflux-spring-boot-starter</artifactId>
-  <version>1.1.0-RELEASE</version>
+  <artifactId>light-security-spring-boot-starter</artifactId>
+  <version>1.0.2-SNAPSHOT</version>
   <name>Spring Boot Light Security Starter</name>
   <description>Starter for using Light Security.</description>
   <url>https://github.com/eacdy/light-security</url>
@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
+      <artifactId>spring-boot-starter-web</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

@@ -68,7 +68,7 @@ Light Security是一款基于 `jwt` 的、简洁而不简单的权限控制框�
   <dependency>
       <groupId>com.itmuch.security</groupId>
       <artifactId>light-security-spring-boot-starter</artifactId>
-      <version>1.0.1-RELEASE</version>
+      <version>1.1.0-RELEASE</version>
   </dependency>
   <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -237,7 +237,7 @@ light-security:
   <dependency>
     <groupId>com.itmuch.security</groupId>
     <artifactId>light-security-webflux-spring-boot-starter</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0-RELEASE</version>
   </dependency>
   ```
 
