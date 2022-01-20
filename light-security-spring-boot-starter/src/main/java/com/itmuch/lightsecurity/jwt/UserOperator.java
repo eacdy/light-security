@@ -1,7 +1,6 @@
 package com.itmuch.lightsecurity.jwt;
 
 import com.itmuch.lightsecurity.constants.ConstantsSecurity;
-import com.itmuch.lightsecurity.exception.LightSecurityException;
 import com.itmuch.lightsecurity.util.WebUtil;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
@@ -38,6 +37,10 @@ public class UserOperator {
             }
 
             String token = this.getTokenFromRequest(request);
+            if (ObjectUtils.isEmpty(token)) {
+                return null;
+            }
+
             Boolean isValid = jwtOperator.validateToken(token);
             if (!isValid) {
                 log.warn("token is not valided. token = {}", token);
@@ -94,9 +97,9 @@ public class UserOperator {
             token = cookieOptional.map(Cookie::getValue)
                     .orElse(null);
         }
-        // 如果依然找不到，则抛异常
+        // 如果依然找不到，返回空
         if (StringUtils.isEmpty(token)) {
-            throw new LightSecurityException("没有找到名为Authorization的header");
+            return null;
         }
 
         // 如果token不以Bearer开头，则直接使用，无需去掉Bearer 前缀
