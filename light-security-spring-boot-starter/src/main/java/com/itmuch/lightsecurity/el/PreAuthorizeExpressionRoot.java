@@ -25,6 +25,7 @@ public class PreAuthorizeExpressionRoot {
      * @return true
      */
     public boolean anon() {
+        this.userOperator.getUser();
         return true;
     }
 
@@ -34,7 +35,7 @@ public class PreAuthorizeExpressionRoot {
      * @return 如已登录，则返回true
      */
     public boolean hasLogin() {
-        return userOperator.getUser() != null;
+        return this.userOperator.getUser() != null;
     }
 
     /**
@@ -54,7 +55,7 @@ public class PreAuthorizeExpressionRoot {
      * @return 如果拥有roles所有角色，则返回true
      */
     public boolean hasAllRoles(String... roles) {
-        LoginUser loginUser = userOperator.getUser();
+        LoginUser loginUser = this.userOperator.getUser();
         if (loginUser == null) {
             return false;
         }
