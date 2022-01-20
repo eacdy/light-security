@@ -9,10 +9,15 @@ public interface ConstantsSecurity {
     /**
      * 请求头
      */
-    String AUTHORIZATION_HEADER = "Authorization";
+    String AUTHORIZATION = "Authorization";
 
     /**
      * Bearer header
      */
     String BEARER = "Bearer ";
+
+    /**
+     * request attribute名称
+     */
+    String LIGHT_SECURITY_REQ_ATTR_USER = "light-security-user";
 }

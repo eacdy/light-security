@@ -77,14 +77,14 @@ public class JwtOperator {
     /**
      * 为指定用户生成token
      *
-     * @param user 用户信息
+     * @param loginUser 用户信息
      * @return token
      */
-    public String generateToken(User user) {
+    public String generateToken(LoginUser loginUser) {
         Map<String, Object> claims = new HashMap<>(3);
-        claims.put(USER_ID, user.getId());
-        claims.put(USERNAME, user.getUsername());
-        claims.put(ROLES, user.getRoles());
+        claims.put(USER_ID, loginUser.getId());
+        claims.put(USERNAME, loginUser.getUsername());
+        claims.put(ROLES, loginUser.getRoles());
         Date createdTime = new Date();
         Date expirationTime = this.getExpirationTime();
 

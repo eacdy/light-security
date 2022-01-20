@@ -2,16 +2,17 @@ package com.itmuch.lightsecurity.jwt;
 
 import com.itmuch.lightsecurity.constants.ConstantsSecurity;
 import com.itmuch.lightsecurity.exception.LightSecurityException;
+import com.itmuch.lightsecurity.util.WebUtil;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author itmuch.com
@@ -19,7 +20,6 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class UserOperator {
-    private static final String LIGHT_SECURITY_REQ_ATTR_USER = "light-security-user";
     private static final int SEVEN = 7;
 
     private final JwtOperator jwtOperator;
@@ -29,25 +29,27 @@ public class UserOperator {
      *
      * @return 用户信息
      */
-    public User getUser() {
+    public LoginUser getUser() {
         try {
-            HttpServletRequest request = getRequest();
-            String token = getTokenFromRequest(request);
+            HttpServletRequest request = WebUtil.getRequest();
+            Object userInReq = request.getAttribute(ConstantsSecurity.LIGHT_SECURITY_REQ_ATTR_USER);
+            if (userInReq != null) {
+                return (LoginUser) userInReq;
+            }
+
+            String token = this.getTokenFromRequest(request);
             Boolean isValid = jwtOperator.validateToken(token);
             if (!isValid) {
+                log.warn("token is not valided. token = {}", token);
                 return null;
             }
 
-            Object userInReq = request.getAttribute(LIGHT_SECURITY_REQ_ATTR_USER);
-            if (userInReq != null) {
-                return (User) userInReq;
-            }
-            User user = getUserFromToken(token);
-            request.setAttribute(LIGHT_SECURITY_REQ_ATTR_USER, user);
-            return user;
+            LoginUser loginUser = this.getUserFromToken(token);
+            request.setAttribute(ConstantsSecurity.LIGHT_SECURITY_REQ_ATTR_USER, loginUser);
+            return loginUser;
         } catch (Exception e) {
             log.info("发生异常", e);
-            throw new LightSecurityException(e);
+            return null;
         }
     }
 
@@ -58,14 +60,14 @@ public class UserOperator {
      * @return 用户信息
      */
     @SuppressWarnings("unchecked")
-    private User getUserFromToken(String token) {
+    private LoginUser getUserFromToken(String token) {
         // 从token中获取user
         Claims claims = jwtOperator.getClaimsFromToken(token);
         Object roles = claims.get(JwtOperator.ROLES);
         Object userId = claims.get(JwtOperator.USER_ID);
         Object username = claims.get(JwtOperator.USERNAME);
 
-        return User.builder()
+        return LoginUser.builder()
                 .id((Integer) userId)
                 .username((String) username)
                 .roles((List<String>) roles)
@@ -79,29 +81,29 @@ public class UserOperator {
      * @return token
      */
     private String getTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader(ConstantsSecurity.AUTHORIZATION_HEADER);
-        if (StringUtils.isEmpty(header)) {
+        // 从header中获取
+        String token = request.getHeader(ConstantsSecurity.AUTHORIZATION);
+        // 如果header中获取不到，则从param中获取
+        if (ObjectUtils.isEmpty(token)) {
+            token = request.getParameter(ConstantsSecurity.AUTHORIZATION);
+        }
+        // 如果param中也取不到，则从cookie中获取
+        if (ObjectUtils.isEmpty(token)) {
+            Cookie[] cookies = request.getCookies();
+            Optional<Cookie> cookieOptional = WebUtil.filterCookieByName(cookies, ConstantsSecurity.AUTHORIZATION);
+            token = cookieOptional.map(Cookie::getValue)
+                    .orElse(null);
+        }
+        // 如果依然找不到，则抛异常
+        if (StringUtils.isEmpty(token)) {
             throw new LightSecurityException("没有找到名为Authorization的header");
         }
-        if (!header.startsWith(ConstantsSecurity.BEARER)) {
-            throw new LightSecurityException("token必须以'Bearer '开头");
-        }
-        if (header.length() <= SEVEN) {
-            throw new LightSecurityException("token非法，长度 <= 7");
-        }
-        return header.substring(SEVEN);
-    }
 
-    /**
-     * 获取request
-     *
-     * @return request
-     */
-    private static HttpServletRequest getRequest() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if ((requestAttributes == null)) {
-            throw new LightSecurityException("requestAttributes为null");
+        // 如果token不以Bearer开头，则直接使用，无需去掉Bearer 前缀
+        if (!token.startsWith(ConstantsSecurity.BEARER)) {
+            log.warn("建议Token以'Bearer '开头，形如`Bearer 你的token`");
+            return token;
         }
-        return ((ServletRequestAttributes) requestAttributes).getRequest();
+        return token.substring(SEVEN);
     }
 }

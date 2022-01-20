@@ -1,6 +1,6 @@
 package com.itmuch.lightsecurity.el;
 
-import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.LoginUser;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,12 +54,12 @@ public class PreAuthorizeExpressionRoot {
      * @return 如果拥有roles所有角色，则返回true
      */
     public boolean hasAllRoles(String... roles) {
-        User user = userOperator.getUser();
-        if (user == null) {
+        LoginUser loginUser = userOperator.getUser();
+        if (loginUser == null) {
             return false;
         }
 
-        List<String> userRoles = user.getRoles();
+        List<String> userRoles = loginUser.getRoles();
         if (CollectionUtils.isEmpty(userRoles)) {
             return false;
         }
@@ -74,12 +74,12 @@ public class PreAuthorizeExpressionRoot {
      * @return 如果拥有roles元素之一，则返回true
      */
     public boolean hasAnyRoles(String... roles) {
-        User user = userOperator.getUser();
-        if (user == null) {
+        LoginUser loginUser = userOperator.getUser();
+        if (loginUser == null) {
             return false;
         }
 
-        List<String> userRoles = user.getRoles();
+        List<String> userRoles = loginUser.getRoles();
         List<String> roleList = Arrays.asList(roles);
         if (CollectionUtils.isEmpty(userRoles)) {
             return false;
