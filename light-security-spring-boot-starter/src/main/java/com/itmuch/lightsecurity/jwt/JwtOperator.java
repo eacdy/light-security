@@ -61,7 +61,7 @@ public class JwtOperator {
      * @return 已过期返回true，未过期返回false
      */
     private Boolean isTokenExpired(String token) {
-        Date expiration = getExpirationDateFromToken(token);
+        Date expiration = this.getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
@@ -70,7 +70,7 @@ public class JwtOperator {
      *
      * @return 过期时间
      */
-    private Date getExpirationTime() {
+    public Date getExpirationTime() {
         return new Date(System.currentTimeMillis() + lightSecurityProperties.getJwt().getExpirationInSecond() * 1000);
     }
 
